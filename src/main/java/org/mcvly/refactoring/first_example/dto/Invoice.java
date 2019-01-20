@@ -19,17 +19,4 @@ public class Invoice
         this.performances = performances;
     }
 
-    @Getter
-    public static class Performance
-    {
-        private final String playId;
-        private final int audience;
-
-        @JsonCreator
-        public Performance(@JsonProperty("playID") String playId, @JsonProperty("audience") int audience)
-        {
-            this.playId = playId;
-            this.audience = audience;
-        }
-    }
 }
