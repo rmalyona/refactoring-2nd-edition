@@ -21,8 +21,7 @@ public class StatementTest {
         Map<String, Map<String, String>> plays = getPlays(objectMapper);
 
         String format = invoices.stream()
-                .map(invoice -> new Statement(plays, invoice))
-                .map(Statement::statement)
+                .map(invoice -> new Statement().textStatement(plays, invoice))
                 .collect(Collectors.joining());
         String[] split = format.split("\n");
         assertEquals(6, split.length);
@@ -32,6 +31,28 @@ public class StatementTest {
         assertEquals("  Othello: $500.00 (40 seats)", split[3]);
         assertEquals("Amount owed is $1730.00", split[4]);
         assertEquals("You earned 47 credits", split[5]);
+    }
+
+    @Test
+    public void sampleDataHtmlFormat() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Invoice> invoices = getInvoices(objectMapper);
+        Map<String, Map<String, String>> plays = getPlays(objectMapper);
+
+        String format = invoices.stream()
+                .map(invoice -> new Statement().htmlStatement(plays, invoice))
+                .collect(Collectors.joining());
+        String[] split = format.split("\n");
+        assertEquals(9, split.length);
+        assertEquals("<h1>Statement for BigCo</h1>", split[0]);
+        assertEquals("<table>", split[1]);
+        assertEquals("<tr><th>play</th><th>seats</th><th>cost</th></tr>", split[2]);
+        assertEquals("  <tr><td>Hamlet</td><td>55</td><td>$650.00</td></tr>", split[3]);
+        assertEquals("  <tr><td>As you like it</td><td>35</td><td>$580.00</td></tr>", split[4]);
+        assertEquals("  <tr><td>Othello</td><td>40</td><td>$500.00</td></tr>", split[5]);
+        assertEquals("</table>", split[6]);
+        assertEquals("<p>Amount owed is <em>$1730.00</em></p>", split[7]);
+        assertEquals("<p>You earned <em>47</em> credits</p>", split[8]);
     }
 
     private Map getPlays(ObjectMapper objectMapper) throws IOException {
