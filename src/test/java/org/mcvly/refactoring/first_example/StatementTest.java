@@ -21,11 +21,12 @@ public class StatementTest {
         Map<String, Map<String, String>> plays = getPlays(objectMapper);
 
         String format = invoices.stream()
-                .map(invoice -> Statement.statement(plays, invoice))
+                .map(invoice -> new Statement(plays, invoice))
+                .map(Statement::statement)
                 .collect(Collectors.joining());
         String[] split = format.split("\n");
         assertEquals(6, split.length);
-        assertEquals("org.mcvly.refactoring.first_example.Statement for BigCo", split[0]);
+        assertEquals("Statement for BigCo", split[0]);
         assertEquals("  Hamlet: $650.00 (55 seats)", split[1]);
         assertEquals("  As you like it: $580.00 (35 seats)", split[2]);
         assertEquals("  Othello: $500.00 (40 seats)", split[3]);

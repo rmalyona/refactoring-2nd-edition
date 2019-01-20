@@ -1,47 +1,84 @@
 package org.mcvly.refactoring.first_example;
 
 import org.mcvly.refactoring.first_example.dto.Invoice;
+import org.mcvly.refactoring.first_example.dto.Performance;
 
 import java.util.Map;
 
 public class Statement {
-    public static String statement(Map plays, Invoice invoice) {
-        double totalAmount = 0;
-        int volumeCredits = 0;
-        String result = String.format("org.mcvly.refactoring.first_example.Statement for %s\n", invoice.getCustomer());
+    private Map plays;
+    private Invoice invoice;
 
-        for (Invoice.Performance performance : invoice.getPerformances()) {
-            Map<String, String> play = (Map<String, String>) plays.get(performance.getPlayId());
-            double thisAmount = 0;
-            switch (play.get("type")) {
-                case "tragedy":
-                    thisAmount = 40000;
-                    if (performance.getAudience() > 30) {
-                        thisAmount += 1000 * (performance.getAudience() - 30);
-                    }
-                    break;
-                case "comedy":
-                    thisAmount = 30000;
-                    if (performance.getAudience() > 20) {
-                        thisAmount += 10000 + 500 * (performance.getAudience() - 20);
-                    }
-                    thisAmount += 300 * performance.getAudience();
-                    break;
-                default:
-                    throw new RuntimeException("Unknown type: " + play.get("type"));
-            }
-            // add volume credits
-            volumeCredits += Math.max(performance.getAudience() - 30, 0);
-            // add extra credit for every ten comedy attendees
-            if ("comedy".equals(play.get("type"))) {
-                volumeCredits += Math.floor(performance.getAudience() / 5);
-            }
+    public Statement(Map plays, Invoice invoice) {
+        this.plays = plays;
+        this.invoice = invoice;
+    }
+
+    public String statement() {
+        String result = String.format("Statement for %s\n", invoice.getCustomer());
+        for (Performance performance : invoice.getPerformances()) {
             // print line for this order
-            result += String.format("  %s: $%.2f (%d seats)\n", play.get("name"), thisAmount / 100, performance.getAudience());
-            totalAmount += thisAmount;
+            result += String.format("  %s: %s (%d seats)\n", playFor(performance).get("name"), usd(amountFor(performance)), performance.getAudience());
         }
-        result += String.format("Amount owed is $%.2f\n", totalAmount / 100);
-        result += String.format("You earned %d credits\n", volumeCredits);
+
+        result += String.format("Amount owed is %s\n", usd(totalAmount()));
+        result += String.format("You earned %d credits\n", totalVolumeCredits());
         return result;
+    }
+
+    private double totalAmount() {
+        double result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += amountFor(performance);
+        }
+        return result;
+    }
+
+    private int totalVolumeCredits() {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += volumeCreditsFor(performance);
+        }
+        return result;
+    }
+
+    private int volumeCreditsFor(Performance performance) {
+        int result = 0;
+        result += Math.max(performance.getAudience() - 30, 0);
+        // add extra credit for every ten comedy attendees
+        if ("comedy".equals(playFor(performance).get("type"))) {
+            result += Math.floor(performance.getAudience() / 5);
+        }
+        return result;
+    }
+
+    private double amountFor(Performance performance) {
+        double result;
+        switch (playFor(performance).get("type")) {
+            case "tragedy":
+                result = 40000;
+                if (performance.getAudience() > 30) {
+                    result += 1000 * (performance.getAudience() - 30);
+                }
+                break;
+            case "comedy":
+                result = 30000;
+                if (performance.getAudience() > 20) {
+                    result += 10000 + 500 * (performance.getAudience() - 20);
+                }
+                result += 300 * performance.getAudience();
+                break;
+            default:
+                throw new RuntimeException("Unknown type: " + playFor(performance).get("type"));
+        }
+        return result;
+    }
+
+    private Map<String, String> playFor(Performance performance) {
+        return (Map<String, String>) plays.get(performance.getPlayId());
+    }
+
+    private String usd(double amount) {
+        return String.format("$%.2f", amount / 100);
     }
 }
