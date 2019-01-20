@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class Performance
+public class PerformanceDTO
 {
     private final String playId;
     private final int audience;
 
     @JsonCreator
-    public Performance(@JsonProperty("playID") String playId, @JsonProperty("audience") int audience)
+    public PerformanceDTO(@JsonProperty("playID") String playId, @JsonProperty("audience") int audience)
     {
         this.playId = playId;
         this.audience = audience;

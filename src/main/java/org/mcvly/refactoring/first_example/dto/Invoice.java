@@ -10,10 +10,10 @@ import java.util.List;
 public class Invoice
 {
     private final String customer;
-    private final List<Performance> performances;
+    private final List<PerformanceDTO> performances;
 
     @JsonCreator
-    public Invoice(@JsonProperty("customer") String customer, @JsonProperty("performances") List<Performance> performances)
+    public Invoice(@JsonProperty("customer") String customer, @JsonProperty("performances") List<PerformanceDTO> performances)
     {
         this.customer = customer;
         this.performances = performances;
