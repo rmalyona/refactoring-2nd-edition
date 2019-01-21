@@ -14,6 +14,37 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public class StatementTest {
+
+    @Test
+    public void testIntermediateData() {
+        List<Map> invoices = getInvoices();
+        StatementData statementData = new StatementData(getPlays(), invoices.get(0));
+
+        assertEquals("BigCo", statementData.getCustomer());
+
+        assertEquals(3, statementData.getPerformances().size());
+        assertEquals("Hamlet", statementData.getPerformances().get(0).getPlayName());
+        assertEquals("tragedy", statementData.getPerformances().get(0).getPlayType());
+        assertEquals(55, statementData.getPerformances().get(0).getAudience());
+        assertEquals(65000, statementData.getPerformances().get(0).getAmount(), 0.01);
+        assertEquals(25, statementData.getPerformances().get(0).getVolumeCredits());
+
+        assertEquals("As you like it", statementData.getPerformances().get(1).getPlayName());
+        assertEquals("comedy", statementData.getPerformances().get(1).getPlayType());
+        assertEquals(35, statementData.getPerformances().get(1).getAudience());
+        assertEquals(58000, statementData.getPerformances().get(1).getAmount(), 0.01);
+        assertEquals(12, statementData.getPerformances().get(1).getVolumeCredits());
+
+        assertEquals("Othello", statementData.getPerformances().get(2).getPlayName());
+        assertEquals("tragedy", statementData.getPerformances().get(2).getPlayType());
+        assertEquals(40, statementData.getPerformances().get(2).getAudience());
+        assertEquals(50000, statementData.getPerformances().get(2).getAmount(), 0.01);
+        assertEquals(10, statementData.getPerformances().get(2).getVolumeCredits());
+
+        assertEquals(173000, statementData.getTotalAmount(), 0.001);
+        assertEquals(47, statementData.getTotalVolumeCredits());
+    }
+
     @Test
     public void sampleDataTextFormat() {
         List<String> strings = getInvoices().stream()
