@@ -31,9 +31,20 @@ class StatementData {
 
     private List<StatementData.Performance> enrichPerformance(Map plays, List<Map> performances) {
         return performances.stream().map(performanceDTO -> {
-            PerformanceCalculator calculator = new PerformanceCalculator(performanceDTO, playFor(plays, performanceDTO));
+            PerformanceCalculator calculator = createPerformanceCalculator(playFor(plays, performanceDTO), performanceDTO);
             return new Performance(calculator.getPlayName(), calculator.getAmount(), calculator.getAudience(), calculator.getVolumeCredits());
         }).collect(toList());
+    }
+
+    private PerformanceCalculator createPerformanceCalculator(Map<String, String> play, Map performanceDTO) {
+        switch (play.get("type")) {
+            case "tragedy":
+                return new TragedyCalculator(performanceDTO, play);
+            case "comedy":
+                return new ComedyCalculator(performanceDTO, play);
+            default:
+                throw new RuntimeException("Unknown play type: " + play.get("type"));
+        }
     }
 
     private Map<String, String> playFor(Map plays, Map performanceDTO) {
