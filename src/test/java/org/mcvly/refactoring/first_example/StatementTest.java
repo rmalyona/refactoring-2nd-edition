@@ -24,19 +24,16 @@ public class StatementTest {
 
         assertEquals(3, statementData.getPerformances().size());
         assertEquals("Hamlet", statementData.getPerformances().get(0).getPlayName());
-        assertEquals("tragedy", statementData.getPerformances().get(0).getPlayType());
         assertEquals(55, statementData.getPerformances().get(0).getAudience());
         assertEquals(65000, statementData.getPerformances().get(0).getAmount(), 0.01);
         assertEquals(25, statementData.getPerformances().get(0).getVolumeCredits());
 
         assertEquals("As you like it", statementData.getPerformances().get(1).getPlayName());
-        assertEquals("comedy", statementData.getPerformances().get(1).getPlayType());
         assertEquals(35, statementData.getPerformances().get(1).getAudience());
         assertEquals(58000, statementData.getPerformances().get(1).getAmount(), 0.01);
         assertEquals(12, statementData.getPerformances().get(1).getVolumeCredits());
 
         assertEquals("Othello", statementData.getPerformances().get(2).getPlayName());
-        assertEquals("tragedy", statementData.getPerformances().get(2).getPlayType());
         assertEquals(40, statementData.getPerformances().get(2).getAudience());
         assertEquals(50000, statementData.getPerformances().get(2).getAmount(), 0.01);
         assertEquals(10, statementData.getPerformances().get(2).getVolumeCredits());
