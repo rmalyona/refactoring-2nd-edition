@@ -1,8 +1,6 @@
 package org.mcvly.refactoring.first_example;
 
 import lombok.Data;
-import org.mcvly.refactoring.first_example.dto.Invoice;
-import org.mcvly.refactoring.first_example.dto.PerformanceDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,18 +23,18 @@ class StatementData {
         private String playType;
     }
 
-    public StatementData(Map plays, Invoice invoice) {
-        this.setCustomer(invoice.getCustomer());
-        this.setPerformances(enrichPerformance(plays, invoice.getPerformances()));
+    public StatementData(Map plays, Map invoice) {
+        this.setCustomer((String) invoice.get("customer"));
+        this.setPerformances(enrichPerformance(plays, (List<Map>) invoice.get("performances")));
         this.setTotalAmount(totalAmount());
         this.setTotalVolumeCredits(totalVolumeCredits());
     }
 
-    private List<StatementData.Performance> enrichPerformance(Map plays, List<PerformanceDTO> performances) {
+    private List<StatementData.Performance> enrichPerformance(Map plays, List<Map> performances) {
         return performances.stream().map(performanceDTO -> {
-            Map<String, String> play = (Map<String, String>) plays.get(performanceDTO.getPlayId());
+            Map<String, String> play = (Map<String, String>) plays.get(performanceDTO.get("playID"));
             StatementData.Performance performance = new StatementData.Performance();
-            performance.setAudience(performanceDTO.getAudience());
+            performance.setAudience((Integer) performanceDTO.get("audience"));
             performance.setPlayName(play.get("name"));
             performance.setPlayType(play.get("type"));
             performance.setAmount(amountFor(performance));

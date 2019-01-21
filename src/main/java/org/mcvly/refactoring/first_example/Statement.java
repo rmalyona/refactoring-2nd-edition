@@ -1,16 +1,14 @@
 package org.mcvly.refactoring.first_example;
 
-import org.mcvly.refactoring.first_example.dto.Invoice;
-
 import java.util.Map;
 
 public class Statement {
 
-    public String textStatement(Map plays, Invoice invoice) {
+    public String textStatement(Map plays, Map invoice) {
         return renderPlainText(new StatementData(plays, invoice));
     }
 
-    public String htmlStatement(Map plays, Invoice invoice) {
+    public String htmlStatement(Map plays, Map invoice) {
         return renderHtml(new StatementData(plays, invoice));
     }
 
